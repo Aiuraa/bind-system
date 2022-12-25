@@ -38,7 +38,7 @@ forward Keybind:Keybind_Create(key, BindAction:action, string:actionMessage[] = 
 forward Keybind_AssignToPlayer(Keybind:bind, player);
 
 // Set trigger state for player that already assigned to the keybind
-forward bool:Keybind_SetTriggerState(Keybind:bind, player, triggerState)
+forward bool:Keybind_SetTriggerState(Keybind:bind, player, triggerState);
 
 // Set/Change Keybind keys
 // More info, see: https://sampwiki.blast.hk/wiki/Keys
