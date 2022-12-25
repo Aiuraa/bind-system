@@ -1,5 +1,5 @@
 /*
-    SA:MP Keybind System v2.0
+    SA:MP Pawn Keybind System v2.0
     By: Kirima2nd
 
     THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, 

@@ -1,6 +1,6 @@
-# SA:MP Keybind System
+# SA:MP Pawn Keybind
 
-[![sampctl](https://img.shields.io/badge/sampctl-bind--system-2f2f2f.svg?style=for-the-badge)](https://github.com/Kirima2nd/bind-system)
+[![sampctl](https://img.shields.io/badge/sampctl-samp--pawn--keybind-2f2f2f.svg?style=for-the-badge)](https://github.com/Kirima2nd/samp-pawn-keybind)
 
 Simple keybind system with several types, making it more dynamic and easy to use.
 
@@ -9,7 +9,7 @@ Simple keybind system with several types, making it more dynamic and easy to use
 Simply install to your project:
 
 ```bash
-sampctl package install Aiuraa/samp-keybind
+sampctl package install Aiuraa/samp-pawn-keybind
 ```
 
 Include in your code and begin using the library:
