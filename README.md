@@ -51,7 +51,7 @@ forward Keybind_SetAction(Keybind:bind, KeybindAction:action, string:actionMessa
 forward Keybind_RemovePlayer(Keybind:bind, player);
 
 // Remove Keybind from the server
-Keybind_Remove(Keybind:bind);
+forward Keybind_Remove(Keybind:bind);
 ```
 
 ## Usage
