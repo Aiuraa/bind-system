@@ -1,109 +1,81 @@
-# bind-system
+# SA:MP Keybind System
 
 [![sampctl](https://img.shields.io/badge/sampctl-bind--system-2f2f2f.svg?style=for-the-badge)](https://github.com/Kirima2nd/bind-system)
 
-Simple bind system with several types, making it more dynamic and easy to use.
+Simple keybind system with several types, making it more dynamic and easy to use.
 
 ## Installation
 
 Simply install to your project:
 
 ```bash
-sampctl package install Se8870/bind-system
+sampctl package install Aiuraa/samp-keybind
 ```
 
 Include in your code and begin using the library:
 
 ```pawn
-#include <bind_system>
+#include <keybind>
 ```
 
 ## Function Lists
 
 Callbacks:
 ```pawn
-// Called when you're using `BIND_TYPE_CUSTOM`
-forward Bind_OnCustomExecuted(playerid, PlayerBind:slot, const string:action[]);
-
 // Called when you set the key press
-forward Bind_OnKeyPressed(playerid, PlayerBind:slot, const string:action[]);
+forward Bind_OnKeyPressed(playerid, const string:action[]);
 ```
 
 Functions:
 ```pawn
-// Getting all slots and store it inside an array.
-forward void:Bind_GetSlots(playerid, PlayerBind:output[MAX_BIND]);
+// Check if keybind is valid
+forward Keybind_IsValid(Keybind:bind);
 
-// Get & Set
-forward E_BIND_TYPE:Bind_GetType(playerid, PlayerBind:slot);
-forward bool:Bind_SetType(playerid, PlaerBind:slot, E_BIND_TYPE:type);
+// Create keybind for certain keys.
+forward Keybind:Keybind_Create(key, BindAction:action, string:actionMessage[] = "");
 
-forward Bind_GetKeys(playerid, PlayerBind:slot);
-forward bool:Bind_SetKeys(playerid, PlayerBind:slot, keys);
+// Assign keybind to player (Will automatically removed when disconnect)
+forward Keybind_AssignToPlayer(Keybind:bind, player);
 
-forward bool:Bind_GetAction(playerid, PlayerBind:slot, string:output[], len = sizeof(output));
-forward bool:Bind_SetAction(playerid, PlayerBind:slot, const string:action[]);
+// Set trigger state for player that already assigned to the keybind
+forward bool:Keybind_SetTriggerState(Keybind:bind, player, triggerState)
 
-// Core function
-forward PlayerBind:Bind_Create(playerid, E_BIND_TYPE:type, const string:action[]);
-forward bool:Bind_Execute(playerid, PlayerBind:slot);
-forward bool:Bind_Remove(playerid, PlayerBind:slot);
+// Set/Change Keybind keys
+// More info, see: https://sampwiki.blast.hk/wiki/Keys
+forward Keybind_SetKey(Keybind:bind, key);
+
+// Set/Change Keybind action
+forward Keybind_SetAction(Keybind:bind, KeybindAction:action, string:actionMessage[] = "");
+
+// Remove player & trigger state from keybind manually
+forward Keybind_RemovePlayer(Keybind:bind, player);
+
+// Remove Keybind from the server
+Keybind_Remove(Keybind:bind);
 ```
 
 ## Usage
 
 ```pawn
 #include <a_samp>
-#include <bind_system>
+#include <keybind>
 
-CMD:createbind(playerid, params[])
+new Keybind:enterKeybind; 
+
+main()
 {
-    new 
-        E_BIND_TYPE:type, action[32];
-
-    if (sscanf(params, "is[32]", _:type, params))
-    {
-        // Usage: /createbind [type] [action]
-        // Type: 1 =  type command | 2 = type chat | 3 = (type custom, you decided)
-        return 0;
-    }
-
-    if (type == BIND_TYPE_NONE || type > BIND_TYPE_CUSTOM)
-    {
-        // Error: invalid type.
-        return 0;
-    }
-
-    Bind_Create(playerid, type, action);
-    // Success creating bind (ID: 1)
+    // Create keybind N for entering any property command
+    enterKeybind = Keybind_Create(KEY_NO, ACTION_COMMAND, "/enter");
     return 1;
 }
 
-CMD:executebind(playerid, params[])
+public OnPlayerConnect(playerid)
 {
-    new PlayerBind:slot;
+    // Assign keybind to playerid
+    Keybind_AssignToPlayer(enterKeybind, playerid);
 
-    if (sscanf(params, "i", _:slot))
-    {
-        // Usage: /executebind [slot]
-        return 0;
-    }
-
-    Bind_Execute(playerid, slot);
-    return 1;
-}
-
-CMD:removebind(playerid, params[])
-{
-    new PlayerBind:slot;
-
-    if (sscanf(params, "i", _:slot))
-    {
-        // Usage: /removebind [slot]
-        return 0;
-    }
-
-    Bind_Remove(playerid, slot);
+    // And then set the trigger state so it can be executed when player is ONFOOT only.
+    Keybind_SetTriggerState(enterKeybind, playerid, PLAYER_STATE_ONFOOT);
     return 1;
 }
 ```

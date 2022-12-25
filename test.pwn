@@ -1,58 +1,21 @@
 #include <a_samp>
+#include <keybind>
 
-#include "bind_system.inc"
-
-new 
-    PlayerBind:mySlots[MAX_PLAYERS];
+new Keybind:enterKeybind; 
 
 main()
 {
-    new playerid = 12;
-    new PlayerBind:slots_1 = Bind_Create(playerid, BIND_TYPE_COMMAND, "/hello");
-    new PlayerBind:slots_2 = Bind_Create(playerid, BIND_TYPE_CHAT, "hello world");
-    
-    new PlayerBind:slots_3 = mySlots[playerid] = Bind_Create(playerid, BIND_TYPE_CUSTOM, "hello %s %d");
-
-    print("Trying to make bind system.");
-
-    new success;
-    success = Bind_Execute(playerid, slots_1);
-    printf("Execute success #1? %s", success ? "Yes" : "No");
-
-    success = Bind_Execute(playerid, slots_2);
-    printf("Execute success #2? %s", success ? "Yes" : "No");
-
-    success = Bind_Execute(playerid, slots_3);
-    printf("Execute success #3? %s", success ? "Yes" : "No");
-
-    success = Bind_Execute(playerid, PlayerBind:69);
-    printf("Execute success #4? %s", success ? "Yes" : "No");
-
+    // Create keybind N for entering any property command
+    enterKeybind = Keybind_Create(KEY_NO, ACTION_COMMAND, "/enter");
+    return 1;
 }
 
-public OnPlayerText(playerid, text[])
+public OnPlayerConnect(playerid)
 {
-    printf("Player says: %s", text);
-    return 0;
-}
+    // Assign keybind to playerid
+    Keybind_AssignToPlayer(enterKeybind, playerid);
 
-public OnPlayerCommandText(playerid, cmdtext[])
-{
-    if (!strcmp(cmdtext, "/hello", true))
-    {
-        print("Hello Two!");
-        return 1;
-    }
-
-    return 0;
-}
-
-public Bind_OnCustomExecuted(playerid, PlayerBind:slot, const string:action[])
-{
-    if (slot == mySlots[playerid])
-    {
-        printf(action, "World", 12);
-        return 1;
-    }
-    return 0;
+    // And then set the trigger state so it can be executed when player is ONFOOT only.
+    Keybind_SetTriggerState(enterKeybind, playerid, PLAYER_STATE_ONFOOT);
+    return 1;
 }
